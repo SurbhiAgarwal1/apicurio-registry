@@ -434,17 +434,15 @@ public class PromptTemplateConverter {
             return template;
         }
 
-        String rendered = template;
+        // Handle {{#if variable}} ... {{/if}} blocks first, on the template structure itself
+        String rendered = processConditionalBlocks(template, args);
 
-        // Simple {{variable}} substitution
+        // Simple {{variable}} substitution second, so block control flow cannot arrive via values
         for (Map.Entry<String, Object> entry : args.entrySet()) {
             String placeholder = "\\{\\{" + entry.getKey() + "\\}\\}";
             String value = entry.getValue() != null ? String.valueOf(entry.getValue()) : "";
             rendered = rendered.replaceAll(placeholder, Matcher.quoteReplacement(value));
         }
-
-        // Handle {{#if variable}} ... {{/if}} blocks
-        rendered = processConditionalBlocks(rendered, args);
 
         return rendered;
     }
