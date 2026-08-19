@@ -6,10 +6,11 @@ import picocli.CommandLine.Command;
 
 @Command(
         name = "search",
-        description = "Search for groups, artifacts, versions, and content",
+        description = "Search for groups, artifacts, versions, contracts, and content",
         subcommands = {
                 SearchArtifactsCommand.class,
                 SearchByContentCommand.class,
+                SearchContractsCommand.class,
                 SearchGroupsCommand.class,
                 SearchVersionsCommand.class
         }

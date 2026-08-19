@@ -48,6 +48,7 @@ public class SearchCommandTest extends AbstractCLITest {
         testHelpCommand("search", "group");
         testHelpCommand("search", "artifact");
         testHelpCommand("search", "content");
+        testHelpCommand("search", "contract");
         testHelpCommand("search", "version");
     }
 
@@ -336,6 +337,28 @@ public class SearchCommandTest extends AbstractCLITest {
     @Order(26)
     public void testSearchVersionsInvalidState() {
         executeAndAssertFailure("search", "versions", "--state", "INVALID");
+    }
+
+    @Test
+    @Order(26)
+    public void testSearchContracts() throws JsonProcessingException {
+        out.getBuffer().setLength(0);
+        executeAndAssertSuccess("search", "contracts", "--output-type", "json");
+        var results = MAPPER.readValue(out.toString(), ArtifactSearchResults.class);
+
+        assertThat(results.getArtifacts())
+                .as(withCliOutput("Contract search should execute successfully"))
+                .isNotNull();
+    }
+
+    @Test
+    @Order(26)
+    public void testSearchContractsTableOutput() {
+        out.getBuffer().setLength(0);
+        executeAndAssertSuccess("search", "contracts");
+        assertThat(out.toString())
+                .as(withCliOutput("Table output should contain column headers"))
+                .contains("Group ID");
     }
 
     // -- Search by content --
